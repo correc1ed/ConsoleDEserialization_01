@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Xml.Serialization;
+
+namespace ConsoleSerialization_1
+{
+    class Program
+    {
+        public static void JSONWriteDown(List<Person> personList)
+        {
+            string ObjectSerialized = JsonSerializer.Serialize(personList);
+            File.WriteAllText("TestFile.json", ObjectSerialized);
+        }
+
+        public static void XMLWriteDown(List<Person> personList)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Person>));
+            using (FileStream fs = new FileStream(@"persons.xml", FileMode.OpenOrCreate))
+            {
+                xmlSerializer.Serialize(fs, personList);
+            }
+
+        }
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Процесс тестовой сериализации.");
+
+            Person p1 = new Person(1, "Иванов", "Иван", "Инженер");
+            Person p2 = new Person(2, "Петров", "Пётр", "Педуктор");
+            Person p3 = new Person(3, "Сидоров", "Сидр", "Дегустатор");
+
+            List<Person> personList = new List<Person>() { p1, p2, p3 };
+
+            JSONWriteDown(personList);
+            XMLWriteDown(personList);
+
+            Console.WriteLine("Объект сериализован!");
+            Console.ReadKey();
+        }
+
+    }
+
+    public class Person
+    {
+        public int id { get; set; }
+        public string SurName { get; set; }
+        public string Name { get; set; }
+        public string Profession { get; set; }
+
+        public Person() { }
+        public Person(int ID, string surname, string name, string profession)
+        {
+            this.id = ID;
+            this.SurName = surname;
+            this.Name = name;
+            this.Profession = profession;
+        } //не пригодилось. :/  
+
+
+    }
+
+
+
+
+
+
+}
